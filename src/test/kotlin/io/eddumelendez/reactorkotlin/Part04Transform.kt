@@ -17,8 +17,8 @@ class Part04Transform {
         val mono = repository.findFirst()
 
         capitalizeOne(mono).test()
-                .expectNext(User("SWHITE", "SKYLER", "WHITE"))
-                .verifyComplete()
+            .expectNext(User("SWHITE", "SKYLER", "WHITE"))
+            .verifyComplete()
     }
 
     // TODO Capitalize the user username, firstname and lastname
@@ -31,12 +31,13 @@ class Part04Transform {
         val flux = repository.findAll()
 
         capitalizeMany(flux).test()
-                .expectNext(
-                        User("SWHITE", "SKYLER", "WHITE"),
-                        User("JPINKMAN", "JESSE", "PINKMAN"),
-                        User("WWHITE", "WALTER", "WHITE"),
-                        User("SGOODMAN", "SAUL", "GOODMAN"))
-                .verifyComplete()
+            .expectNext(
+                User("SWHITE", "SKYLER", "WHITE"),
+                User("JPINKMAN", "JESSE", "PINKMAN"),
+                User("WWHITE", "WALTER", "WHITE"),
+                User("SGOODMAN", "SAUL", "GOODMAN")
+            )
+            .verifyComplete()
     }
 
     // TODO Capitalize the users username, firstName and lastName
@@ -49,12 +50,13 @@ class Part04Transform {
         val flux = repository.findAll()
 
         asyncCapitalizeMany(flux).test()
-                .expectNext(
-                        User("SWHITE", "SKYLER", "WHITE"),
-                        User("JPINKMAN", "JESSE", "PINKMAN"),
-                        User("WWHITE", "WALTER", "WHITE"),
-                        User("SGOODMAN", "SAUL", "GOODMAN"))
-                .verifyComplete()
+            .expectNext(
+                User("SWHITE", "SKYLER", "WHITE"),
+                User("JPINKMAN", "JESSE", "PINKMAN"),
+                User("WWHITE", "WALTER", "WHITE"),
+                User("SGOODMAN", "SAUL", "GOODMAN")
+            )
+            .verifyComplete()
     }
 
     // TODO Capitalize the users username, firstName and lastName using asyncCapitalizeUser()
@@ -65,5 +67,4 @@ class Part04Transform {
     fun asyncCapitalizeUser(user: User): Mono<User> {
         return User(user.username.toUpperCase(), user.firstname?.toUpperCase(), user.lastname?.toUpperCase()).toMono()
     }
-
 }
