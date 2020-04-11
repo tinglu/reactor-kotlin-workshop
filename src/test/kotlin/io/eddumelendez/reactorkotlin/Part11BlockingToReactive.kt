@@ -9,6 +9,7 @@ import org.junit.Assert.assertFalse
 import org.junit.Test
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import reactor.core.scheduler.Schedulers
 import reactor.kotlin.test.test
 
 class Part11BlockingToReactive {
@@ -19,13 +20,14 @@ class Part11BlockingToReactive {
         val flux = blockingRepositoryToFlux(repository)
         assertEquals("The call to findAll must be deferred until the flux is subscribed", 0, repository.callCount)
         flux.test()
-                .expectNext(User.SKYLER, User.JESSE, User.WALTER, User.SAUL)
-                .verifyComplete()
+            .expectNext(User.SKYLER, User.JESSE, User.WALTER, User.SAUL)
+            .verifyComplete()
     }
 
     // TODO Create a Flux for reading all users from the blocking repository deferred until the flux is subscribed, and run it with an elastic scheduler
     fun blockingRepositoryToFlux(repository: BlockingRepository<User>): Flux<User> {
-        return null!!
+        return Flux.defer({ Flux.fromIterable(repository.findAll()) })
+            .subscribeOn(Schedulers.boundedElastic())
     }
 
     @Test
@@ -35,7 +37,7 @@ class Part11BlockingToReactive {
         val complete = fluxToBlockingRepository(reactiveRepository.findAll(), blockingRepository)
         assertEquals(0, blockingRepository.callCount)
         complete.test()
-                .verifyComplete()
+            .verifyComplete()
         val it = blockingRepository.findAll().iterator()
         assertEquals(User.SKYLER, it.next())
         assertEquals(User.JESSE, it.next())
@@ -48,5 +50,4 @@ class Part11BlockingToReactive {
     fun fluxToBlockingRepository(flux: Flux<User>, repository: BlockingRepository<User>): Mono<Void> {
         return null!!
     }
-
 }
